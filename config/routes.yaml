@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+currency_exchange:
+    path: /currency-exchange/show
+    controller: App\Controller\CurrencyExchange::show
