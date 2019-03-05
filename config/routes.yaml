@@ -5,3 +5,11 @@
 currency_exchange:
     path: /currency-exchange/show
     controller: App\Controller\CurrencyExchange::show
+
+api_usd:
+    path: /api/usd
+    controller: App\Controller\Api::usd
+
+api_eur:
+    path: /api/eur
+    controller: App\Controller\Api::eur

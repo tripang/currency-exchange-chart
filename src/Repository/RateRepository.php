@@ -19,32 +19,31 @@ class RateRepository extends ServiceEntityRepository
         parent::__construct($registry, Rate::class);
     }
 
-    // /**
-    //  * @return Rate[] Returns an array of Rate objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Rate[] Returns an array of Rate objects
+     */
+    public function findUsd()
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('r.date, r.value')
+            ->andWhere('r.name = :name')
+            ->setParameter('name', 'usd-rub')
+            ->orderBy('r.date', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Rate
+    /**
+     * @return Rate[] Returns an array of Rate objects
+     */
+    public function findEur()
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('r.date, r.value')
+            ->andWhere('r.name = :name')
+            ->setParameter('name', 'eur-rub')
+            ->orderBy('r.date', 'ASC')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

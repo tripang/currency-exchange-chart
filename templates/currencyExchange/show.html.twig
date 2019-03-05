@@ -1,67 +1,87 @@
-<html lang="en-US" prefix="og: http://ogp.me/ns#">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+    </head>
 
-<!-- HTML -->
-<div id="chartdiv"></div>
+    <body>
+        <div id="usd">
+            <h2>USD</h2>
+            <div id="chartUsd"></div>
+        </div>
 
-<!-- Styles -->
-<style>
-    #chartdiv {
-        width: 100%;
-        height: 500px;
-    }
+        <div id="eur">
+            <h2>EUR</h2>
+            <div id="chartEur" style=""></div>
+        </div>
 
-</style>
+        <style>
+            #chartUsd, #chartEur {
+                width: 100%;
+                height: 300px;
+            }
+            h2 {
+                font-family: "DejaVu Sans";
+                color: #6dbadd;
+                text-align: center;
+                margin: 50px 0 0 0;
+            }
 
-<!-- Resources -->
-<script src="https://www.amcharts.com/lib/4/core.js"></script>
-<script src="https://www.amcharts.com/lib/4/charts.js"></script>
-<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+            #eur {
+                display: none;
+            }
+        </style>
 
-<!-- Chart code -->
-<script>
-    // Themes begin
-    am4core.useTheme(am4themes_animated);
-    // Themes end
+        <script src="https://www.amcharts.com/lib/4/core.js"></script>
+        <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+        <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    var chart = am4core.create("chartdiv", am4charts.XYChart);
+        <script>
+            $.ajax({
+                url: "/api/usd",
+                success: function(rates) {
+                    showChart('chartUsd', rates);
 
-    var data = [];
-    var value = 50;
-    for (let i = 0; i < 300; i++) {
-        let date = new Date();
-        date.setHours(0,0,0,0);
-        date.setDate(i);
-        value -= Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
-        data.push({date:date, value: value});
-    }
+                    $.ajax({
+                        url: "/api/eur",
+                        success: function(rates) {
+                            showChart('chartEur', rates);
+                            $('#eur').show();
+                        }
+                    });
+                }
+            });
 
-    chart.data = data;
+            function showChart(chartName, rates) {
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
 
-    // Create axes
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    dateAxis.renderer.minGridDistance = 60;
+                var chart = am4core.create(chartName, am4charts.XYChart);
 
-    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                chart.data = rates;
 
-    // Create series
-    var series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.valueY = "value";
-    series.dataFields.dateX = "date";
-    series.tooltipText = "{value}";
+                // Create axes
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                dateAxis.renderer.minGridDistance = 60;
 
-    series.tooltip.pointerOrientation = "vertical";
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-    chart.cursor = new am4charts.XYCursor();
-    chart.cursor.snapToSeries = series;
-    chart.cursor.xAxis = dateAxis;
+                // Create series
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = "value";
+                series.dataFields.dateX = "date";
+                series.tooltipText = "{value}";
 
-    //chart.scrollbarY = new am4core.Scrollbar();
-    chart.scrollbarX = new am4core.Scrollbar();
-</script>
+                series.tooltip.pointerOrientation = "vertical";
 
-</body>
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.snapToSeries = series;
+                chart.cursor.xAxis = dateAxis;
+
+                //chart.scrollbarY = new am4core.Scrollbar();
+                chart.scrollbarX = new am4core.Scrollbar();
+            }
+        </script>
+    </body>
 </html>

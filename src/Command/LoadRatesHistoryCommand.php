@@ -40,6 +40,11 @@ class LoadRatesHistoryCommand extends Command
         $rateHistory = $this->rateHistory->getHistory();
         foreach ($rateHistory as $row) {
             $rate = $this->rateHistory->get($row);
+
+            if (!$rate) {
+                break;
+            }
+
             $output->writeln($rate->date.' '.$rate->usd.' '.$rate->eur);
             $this->rateHistory->add($rate);
         }

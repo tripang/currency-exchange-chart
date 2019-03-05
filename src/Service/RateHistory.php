@@ -24,16 +24,21 @@ class RateHistory
 
     public function get($row)
     {
+
         $dayRates = explode( ",", $row);
         $eur2usd = $dayRates[1];
         $eur2rub = $dayRates[23];
-        $usd2rub = round($eur2rub / $eur2usd, 4);
+        if (is_numeric($eur2usd) && is_numeric($eur2rub)) {
+            $usd2rub = round($eur2rub / $eur2usd, 4);
 
-        return (object) [
-            'date' => $dayRates[0],
-            'usd' => $usd2rub,
-            'eur' => $eur2rub
-        ];
+            return (object) [
+                'date' => $dayRates[0],
+                'usd' => $usd2rub,
+                'eur' => $eur2rub
+            ];
+        }
+
+        return false;
     }
 
     public function add($rate)
