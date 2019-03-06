@@ -8,10 +8,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use App\Service\RateService;
 
-class LoadRatesHistoryCommand extends Command
+class UpdateRatesCommand extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'app:load-rates-history';
+    protected static $defaultName = 'app:update-rates';
 
     private $rateHistory;
 
@@ -25,31 +25,20 @@ class LoadRatesHistoryCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Create historical reference rates.')
-            ->setHelp('Create historical reference rates');
+            ->setDescription('Update rates.')
+            ->setHelp('Update rates.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln([
-            'Create historical reference rates',
+            'Update rates',
             '=================================',
             '',
         ]);
 
-        $rateHistory = $this->rateHistory->getHistory();
-        foreach ($rateHistory as $row) {
-            $rate = $this->rateHistory->get($row);
+        $this->rateHistory->addTodayRates();
 
-            if (!$rate) {
-                break;
-            }
-
-            $output->writeln($rate->date.' '.$rate->usd.' '.$rate->eur);
-            $this->rateHistory->add($rate);
-        }
-
-        $this->rateHistory->flush();
-        $output->writeln('Rates history saved.');
+        $output->writeln('Rates Updated.');
     }
 }
